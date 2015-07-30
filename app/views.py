@@ -253,6 +253,7 @@ def stripe2():
         customer = Customer.create(
             email = str(emailz),
             card = str(request.args.get('card'))
+
         )
         if team == 1:
             amnt = 5
