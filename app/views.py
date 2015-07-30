@@ -238,18 +238,20 @@ def stripe2():
     form = xForm()
     form2 = signForm()
     team = None
+    emailz = None
     output = render_template("fail.html")
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
         if g.user != None:
             team = g.user.ptype
+            emailz = g.user.email
     stripe.api_key = stripe_keys['secret_key']
     print "--- begin stripe ---"
     if request.form['stripeToken']:
         print "--- stripe 1 worked ---"
         stripe.api_key = "sk_live_GFHD3hslyrBiTy9I2HCEIP7y"
         customer = Customer.create(
-            email = g.user.email,
+            email = emailz,
             card = request.form['stripeToken']
         )
         if team == 1:
