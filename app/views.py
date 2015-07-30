@@ -249,7 +249,7 @@ def stripe2():
         print "--- stripe 1 worked ---"
         stripe.api_key = "sk_live_GFHD3hslyrBiTy9I2HCEIP7y"
         customer = Customer.create(
-            email = request.form['email'],
+            email = "test@test.com",
             card = request.form['stripeToken']
         )
         if team == 1:
