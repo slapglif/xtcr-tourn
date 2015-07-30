@@ -14,6 +14,7 @@ class User(Base):
     member2 = Column(String)
     member3 = Column(String)
     member4 = Column(String)
+    paid = Column(Integer)
 
 
     @staticmethod

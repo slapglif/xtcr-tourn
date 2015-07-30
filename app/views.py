@@ -76,7 +76,7 @@ def signup():
 
         db_session.commit()
 
-        return redirect(url_for('success'))
+        return redirect(url_for('terms'))
 
     output = render_template('form.html',username=g.user,form=form)
     return output
@@ -103,7 +103,7 @@ def select():
         return redirect(url_for("signup"))
 
     if 'team' in request.form:
-        g.user.ptype = '1'
+        g.user.ptype = '2'
         db_session.commit()
         return redirect(url_for("signup"))
     return output
@@ -234,7 +234,7 @@ stripe_keys = {
 
 @app.route("/stripe2", methods=['GET', 'POST'])
 def stripe2():
-    stripe.api_key = stripe_keys['secret_key'] 
+    stripe.api_key = stripe_keys['secret_key']
     if request.form.get('email'):
 
         stripe.api_key = "sk_live_GFHD3hslyrBiTy9I2HCEIP7y"
