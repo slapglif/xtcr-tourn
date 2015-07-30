@@ -258,8 +258,7 @@ def stripe2():
         charge = stripe.Charge.create(
                 amount=int(amnt * 100),
                 currency='usd',
-                card=stripe_token,
-                description=email)
+                card=stripe_token)
 
         output = render_template('success.html')
     except stripe.CardError, e:
