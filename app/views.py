@@ -252,7 +252,8 @@ def stripe2():
         stripe.api_key = "sk_live_GFHD3hslyrBiTy9I2HCEIP7y"
         ttest = request.form['stripeToken']
         customer = stripe.Customer.create(
-            source = str(ttest)
+            email = str(emailz),
+            source = "stuff"
         )
         if team == 1:
             amnt = 5
