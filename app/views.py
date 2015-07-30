@@ -58,7 +58,7 @@ def signup():
         g.user.email = form.email.data
         g.user.team = form.team.data
         g.user.website = form.website.data
-        drill(g.user.nickname,g.user.email)
+
         g.user.member1 = form.member1.data
         g.user.member2 = form.member2.data
         g.user.member3 = form.member3.data
@@ -125,6 +125,7 @@ def payment():
         g.user = User.query.get(session['user_id'])
         if g.user != None:
             team = g.user.ptype
+            print "x is %s"%team
     output = render_template("payment.html",team=team)
     return output
 
@@ -137,7 +138,7 @@ def success():
 
 
 
-
+    drill(g.user.nickname,g.user.email)
     output = render_template('success.html',username=g.user)
 
     return output
@@ -260,6 +261,8 @@ def stripe2():
                 currency='usd',
                 card=stripe_token,
                 description=email)
+        g.user.paid = 1
+        db_session.commit()
 
         output = render_template('success.html')
     except stripe.CardError, e:
