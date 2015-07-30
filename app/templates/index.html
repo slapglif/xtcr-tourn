@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+{% block content %}
+<!-- Main content -->
+        <div class="content">
+            <div class="container">
+                <!-- Header -->
+                <div class="row">
+                    <h1 class="header col-sm-8 col-sm-offset-2">xTcR Tournament!</h1>
+                </div>
+                <!-- /Header -->
+
+                <!-- Description -->
+                <div class="row">
+                    <p class="description col-sm-8 col-sm-offset-2">Sign in below to enter the tournament for a chance to win the 100$ prize!</p>
+                </div>
+                <!-- /Description -->
+            </div>
+
+            <!-- Countdown -->
+            <div class="countdown" id="countdown">
+                <div class="container">
+                    <div class="row">
+                        <div class="countdown-item col-sm-3 col-xs-6">
+                            <div class="countdown-number" id="countdown-days"></div>
+                            <div class="countdown-label">days</div>
+                        </div>
+
+                        <div class="countdown-item col-sm-3 col-xs-6">
+                            <div class="countdown-number" id="countdown-hours"></div>
+                            <div class="countdown-label">hours</div>
+                        </div>
+
+                        <div class="countdown-item col-sm-3 col-xs-6">
+                            <div class="countdown-number" id="countdown-minutes"></div>
+                            <div class="countdown-label">minutes</div>
+                        </div>
+
+                        <div class="countdown-item col-sm-3 col-xs-6">
+                            <div class="countdown-number" id="countdown-seconds"></div>
+                            <div class="countdown-label">seconds</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /Countdown -->
+<p>&nbsp;</p>
+            <div class="container">
+                <div class="row">
+                    <div class="form-and-links-container col-sm-8 col-sm-offset-2">
+                        <!-- Subscription form -->
+                        <div class="row">
+                         <a class="landing-sign btn-main btn-sell btn-block btn btn-lg" href="/login" role="button"><i class="fa fa-steam"></i> Sign in to enter</a>
+
+                        </div>
+                                {% with messages = get_flashed_messages() %}
+            {% if messages %}
+    <div align="center">
+                <div id="flashes">
+                        {{ messages[-1:] | safe }}
+                </div>
+
+        </div>
+                        {% endif %}
+                        {% endwith %}
+{% endblock %}

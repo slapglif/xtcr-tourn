@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block content %}
+        <!-- Main content -->
+        <div class="content">
+            <div class="container">
+                <!-- Header -->
+                <div class="row">
+                    <h1 class="header col-sm-8 col-sm-offset-2">Success!</h1>
+                </div>
+                <!-- /Header -->
+
+                <!-- Description -->
+                <div class="row">
+                    <p class="description col-sm-8 col-sm-offset-2">The tournament will start after the countdown below has expired!
+                    You will be notified via email with detailed instructions on how to proceed.
+                    Be sure to check out the full bracket @ <a href="http://xtcr.challonge.com">http://xtcr.challonge.com/</a></p>
+                </div>
+                <!-- /Description -->
+            </div>
+
+            <!-- Countdown -->
+            <div class="countdown" id="countdown">
+                <div class="container">
+                    <div class="row">
+                        <div class="countdown-item col-sm-3 col-xs-6">
+                            <div class="countdown-number" id="countdown-days"></div>
+                            <div class="countdown-label">days</div>
+                        </div>
+
+                        <div class="countdown-item col-sm-3 col-xs-6">
+                            <div class="countdown-number" id="countdown-hours"></div>
+                            <div class="countdown-label">hours</div>
+                        </div>
+
+                        <div class="countdown-item col-sm-3 col-xs-6">
+                            <div class="countdown-number" id="countdown-minutes"></div>
+                            <div class="countdown-label">minutes</div>
+                        </div>
+
+                        <div class="countdown-item col-sm-3 col-xs-6">
+                            <div class="countdown-number" id="countdown-seconds"></div>
+                            <div class="countdown-label">seconds</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /Countdown -->
+<p>&nbsp;</p>
+{% endblock %}

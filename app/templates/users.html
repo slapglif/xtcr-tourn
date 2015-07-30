@@ -1,0 +1,868 @@
+{% block content %}
+
+
+<script>
+
+    /*jslint browser: true*/
+    /*global $, jQuery*/
+
+    $('#game-select').ddslick();
+    $('#btc-select').ddslick();
+
+    var fullTime = 600, //fulltime in seconds
+            currentTime = 600;
+
+    var chartData = [
+        {
+            value: 0,
+            color: "#a4917e",
+            label: "main"
+        },
+        {
+            value: 15,
+            color: "transparent"
+        }
+    ]
+
+    var chartData2 = [
+        {
+            value: fullTime,
+            color: "#eb8800",
+            label: "main",
+        },
+        {
+            value: currentTime,
+            color: "transparent"
+        }
+    ]
+
+    var giveawayData = [
+        {
+            value: 70,
+            color: "#a4917e",
+            label: "main"
+        },
+        {
+            value: 20,
+            color: "#eb8800"
+        },
+        {
+            value: 10,
+            color: "transparent"
+        }
+    ]
+
+    var chartOptions = {
+        showTooltips: false,
+        tooltipCornerRadius: 0,
+        datasetStroke: false,
+        segmentStrokeColor: "transparent",
+        responsive: true,
+        percentageInnerCutout: 75,
+    }
+
+    var itemsChart = null;
+    var playersChart = null;
+    var giveawayChart = null;
+
+    $(document).ready(function () {
+        if (document.getElementById("itemsChart")) {
+            var ctx = document.getElementById("itemsChart").getContext("2d");
+            itemsChart = new Chart(ctx).Doughnut(chartData, chartOptions);
+        }
+        if (document.getElementById("playersChart")) {
+            var ctx2 = document.getElementById("playersChart").getContext("2d");
+            playersChart = new Chart(ctx2).Doughnut(chartData2, chartOptions);
+        }
+        //giveaway chart canvas for landing page
+        if (document.getElementById("giveawayChart")) {
+            var ctx3 = document.getElementById("giveawayChart").getContext("2d");
+            giveawayChart = new Chart(ctx3).Doughnut(giveawayData, chartOptions);
+        }
+    });
+
+    function updateChart(chart, val, pre) {
+        if (pre == null)
+            pre = '';
+
+        chart.segments[0].value = val;
+        chart.update();
+
+        var num = null;
+        if (chart == itemsChart)
+            num = $("#itemsChart");
+        else
+            num = $("#playersChart");
+
+        if (num != null)
+            num.next().html(pre + val);
+    }
+
+    $("#trade-update").click(function () {
+        var url = $("#trade-url").val();
+        $.post("/api/SetToken", "url=" + encodeURIComponent(url), function (res) {
+            $("#modal-trade-status")
+                    .removeClass("alert-success")
+                    .removeClass("alert-danger")
+                    .addClass(res.success ? "alert-success" : "alert-danger")
+                    .html(res.success ? res.payload : res.errorMessage);
+        });
+    });
+
+    function sliderSlick() {
+        $('.slider').slick({
+            dots: false,
+            prevArrow: '<button type="button" class="btn slick-prev"><i class="fa fa-caret-left"></i></button>',
+            nextArrow: '<button type="button" class="btn slick-next"><i class="fa fa-caret-right"></i></button>',
+            infinite: false,
+            speed: 300,
+            slidesToShow: 8,
+            slidesToScroll: 8,
+            responsive: [
+                {
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 3,
+                        infinite: true,
+                    }
+                },
+                {
+                    breakpoint: 600,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2
+                    }
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1
+                    }
+                }
+                // You can unslick at a given breakpoint now by adding:
+                // settings: "unslick"
+                // instead of a settings object
+            ]
+        });
+    }
+
+
+    //timer function, support state variable that can have value of "srat" and "reset"
+    function timer(state, ct) {
+
+        //convert time in seconds to minutes and output minutes:seconds
+        function seconds2Minutes(seconds) {
+
+            var minutes = Math.floor((seconds) / 60);
+
+            seconds -= ((minutes * 60));
+            seconds += '';
+            minutes += '';
+
+            while (minutes.length < 2) {
+                minutes = '0' + minutes;
+            }
+            while (seconds.length < 2) {
+                seconds = '0' + seconds;
+            }
+
+            return minutes + ':' + seconds;
+        }
+
+        if (state == 'start') {
+
+            var countdown = function () {
+                currentTime += +1; //add 1 second to the time passed
+
+                //update charts
+                playersChart.segments[0].value = fullTime - currentTime;
+                playersChart.segments[1].value = currentTime;
+                playersChart.update();
+
+                $('#countdown').text(seconds2Minutes(fullTime - currentTime));       //update text value
+
+                if (currentTime == fullTime) { //if the current time is equal to full raffle time, stop the countdown
+                    clearInterval(counting);
+                }
+
+            };
+
+            //start countdown interval
+            var counting = setInterval(countdown, 1000);
+        }
+        else if (state == 'reset') {
+            clearInterval(counting); //stop countdown interval
+            currentTime = fullTime - ct;
+
+            playersChart.segments[0].value = fullTime;
+            playersChart.segments[1].value = currentTime;
+            playersChart.update();
+
+            $('#countdown').text(seconds2Minutes(fullTime)); //reset text value to full time
+        }
+    }
+
+    function changeState(state) {
+        window.open('https://steamcommunity.com/tradeoffer/new/?partner=93339940&token=TXKyPn3H');
+
+        $.getJSON("/api/ChangeState?state=" + state, function (res) {
+            if (res.success) {
+                getAccount();
+            }
+            else
+                alert('You must be logged in to perform this action!');
+        });
+    }
+
+</script>
+
+<style>
+    /* Generated by less 2.4.0 */
+    /*---------------------------------------------------
+        LESS Elements 0.9
+      ---------------------------------------------------
+        A set of useful LESS mixins
+        More info at: http://lesselements.com
+      ---------------------------------------------------*/
+    html,
+    body {
+        height: 100%;
+    }
+
+    body {
+        font-family: Raleway, sans-serif;
+        line-height: 1.6;
+        background-color: #0a0a0a;
+        background-image: url('../img/cs_bg.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+
+    h1,
+    h2,
+    h3 {
+        font-family: Raleway, sans-serif;
+        font-weight: 600;
+        color: #eb8800;
+    }
+
+    p,
+    ul {
+        color: #d3b89d;
+    }
+
+    .btn-main {
+        background-color: #a4917e;
+        -webkit-border-radius: 0;
+        -moz-border-radius: 0;
+        border-radius: 0;
+        border: 1px solid #d3b89d;
+        color: white;
+        font-size: 14px;
+        transition: all .5s;
+    }
+
+    .btn-main:hover,
+    .btn-main:focus {
+        color: #d3b89d;
+    }
+
+    .btn-2nd {
+        background-color: #eb8800;
+        -webkit-border-radius: 0;
+        -moz-border-radius: 0;
+        border-radius: 0;
+        border: 5px solid #bf6f00;
+        color: white;
+        font-size: 24px;
+        font-weight: 500;
+        transition: all .5s;
+    }
+
+    .btn-2nd:hover,
+    .btn-2nd:focus {
+        color: #8c5100;
+        border: 5px solid #eb8800;
+    }
+
+    .icon-subtitle {
+        display: block;
+        text-align: center;
+        word-wrap: break-word;
+    }
+
+    .main-c {
+        color: #a4917e;
+    }
+
+    .secondary-c {
+        color: #eb8800;
+    }
+
+    .gold {
+        color: gold;
+    }
+
+    .silver {
+        color: silver;
+    }
+
+    .bronze {
+        color: brown;
+    }
+
+    blockquote {
+        color: #d3b89d;
+        border-left: solid 3px #eb8800;
+        font-size: 14px;
+    }
+
+    .table > thead > tr > th {
+        color: #a4917e;
+    }
+
+    .table > tbody > tr > td,
+    .table > thead > tr > th {
+        border-style: none;
+        padding: 10px;
+    }
+
+    .table-striped > tbody > tr {
+        color: #d3b89d;
+        background-color: rgba(211, 184, 157, 0.2);
+    }
+
+    .table-striped > tbody > tr:nth-of-type(odd) {
+        background-color: rgba(164, 145, 126, 0.2);
+    }
+
+    .top-wrapper {
+        background: rgba(211, 184, 157, 0.1);
+        padding: 30px 0 0;
+    }
+
+    .navbar-brand {
+        font-family: 'Bebas Neue', sans-serif;
+        font-weight: 700;
+        font-size: 48px;
+        transition: all .5s;
+        color: white;
+    }
+
+    .navbar-brand:hover,
+    .navbar-brand:focus {
+        color: #a4917e;
+    }
+
+    .navbar-toggle {
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        -webkit-border-radius: 0px;
+        -moz-border-radius: 0px;
+        border-radius: 0px;
+        margin-top: 3px;
+    }
+
+    .navbar {
+        margin-bottom: 10px;
+    }
+
+    .navbar-nav li a {
+        color: #eb8800;
+        text-transform: uppercase;
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+    .navbar-nav li a:hover,
+    .navbar-nav li a:focus {
+        background: none;
+    }
+
+    .navbar-nav li a::before,
+    .navbar-nav li a::after {
+        display: inline-block;
+        opacity: 0;
+        -webkit-transition: -webkit-transform 0.3s, opacity 0.2s;
+        -moz-transition: -moz-transform 0.3s, opacity 0.2s;
+        transition: transform 0.3s, opacity 0.2s;
+    }
+
+    .navbar-nav li a::before {
+        margin-right: 10px;
+        content: '|';
+        color: #a4917e;
+        -webkit-transform: translateX(20px);
+        -moz-transform: translateX(20px);
+        transform: translateX(20px);
+    }
+
+    .navbar-nav li a::after {
+        margin-left: 10px;
+        content: '|';
+        color: #a4917e;
+        -webkit-transform: translateX(-20px);
+        -moz-transform: translateX(-20px);
+        transform: translateX(-20px);
+    }
+
+    .navbar-nav li a:hover::before,
+    .navbar-nav li a:hover::after,
+    .navbar-nav li a:focus::before,
+    .navbar-nav li a:focus::after {
+        opacity: 1;
+        -webkit-transform: translateX(0px);
+        -moz-transform: translateX(0px);
+        transform: translateX(0px);
+    }
+
+    .landing-header {
+        margin: 25px auto;
+    }
+
+    @media only screen and (min-width: 1200px) {
+        .landing-header {
+            margin: 100px auto;
+        }
+    }
+
+    .landing-header .sign-btn {
+        margin-top: 25px;
+    }
+
+    .leaderboards .table-wrapper {
+        position: relative;
+        padding: 15px;
+        background: rgba(0, 0, 0, 0.5);
+    }
+
+    .leaderboards .table-wrapper .table-title {
+        position: absolute;
+        top: -30px;
+    }
+
+    .leaderboards .status-icon {
+        padding: 0 5px;
+    }
+
+    .modal .modal-header {
+        background: rgba(211, 184, 157, 0.1);
+        margin: 25px auto 0;
+    }
+
+    .modal .modal-header .close {
+        color: white;
+        opacity: .75;
+        transition: all .2s;
+        margin-top: 5px;
+    }
+
+    .modal .modal-header .close:hover {
+        opacity: 1;
+    }
+
+    .modal .alert {
+        margin: 15px auto 15px;
+        transition: all .5s;
+    }
+
+    .modal .alert .close {
+        color: white;
+        opacity: .75;
+        transition: all .2s;
+        margin-top: 5px;
+        color: #bf6f00;
+        margin: 0 auto;
+    }
+
+    .modal .alert .close:hover {
+        opacity: 1;
+    }
+
+    .modal .modal-content {
+        -webkit-border-top-right-radius: 0px;
+        -webkit-border-bottom-right-radius: 0;
+        -webkit-border-bottom-left-radius: 0;
+        -webkit-border-top-left-radius: 0;
+        -moz-border-radius-topright: 0px;
+        -moz-border-radius-bottomright: 0;
+        -moz-border-radius-bottomleft: 0;
+        -moz-border-radius-topleft: 0;
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+        border-top-left-radius: 0;
+        -moz-background-clip: padding-box;
+        -webkit-background-clip: padding-box;
+        background-clip: padding-box;
+        background-color: rgba(0, 0, 0, 0.75);
+        color: white;
+        background-image: url('../img/foot_bg_blue.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: right bottom;
+    }
+
+    .modal .modal-content label {
+        color: #eb8800;
+    }
+
+    .modal .modal-header,
+    .modal .modal-footer {
+        border: none;
+        position: relative;
+    }
+
+    .modal .modal-footer {
+        position: relative;
+    }
+
+    .modal .modal-footer .dark-bar {
+        position: absolute;
+        width: 100%;
+        height: 32px;
+        background: rgba(211, 184, 157, 0.1);
+        border-top: 1px solid #eb8800;
+        border-bottom: 1px solid #eb8800;
+        margin-top: 10px;
+        left: 0;
+    }
+
+    .modal .current-balance {
+        margin: 15px auto;
+        font-size: 16px;
+    }
+
+    .modal .current-balance .amount {
+        font-weight: 600;
+    }
+
+    .modal .current-balance .withdraw-amount {
+        font-weight: 600;
+        color: red;
+    }
+
+    .modal .btn-withdraw {
+        position: relative;
+        z-index: 100;
+    }
+
+    .chart-wrapper {
+        position: relative;
+        margin: 0 auto 25px;
+    }
+
+    .chart-wrapper .chart-value {
+        font-size: 55px;
+        font-weight: 800;
+        color: #eb8800;
+        position: absolute;
+        margin: auto;
+        top: 50%;
+        transform: translateY(-50%);
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+
+    .chart-wrapper .chart-value.giveaway-prize {
+        top: 60%;
+        transform: translateY(-60%);
+    }
+
+    @media only screen and (min-width: 1200px) {
+        .chart-wrapper .chart-value {
+            font-size: 90px;
+        }
+
+        .chart-wrapper .chart-value.giveaway-prize {
+            font-size: 65px;
+        }
+    }
+
+    .slider {
+        background: rgba(211, 184, 157, 0.1);
+        padding: 0 15px 15px;
+        margin: 25px auto;
+    }
+
+    .slider .slick-list {
+        width: 95%;
+        margin: auto;
+    }
+
+    .slider .slick-prev,
+    .slider .slick-next {
+        position: absolute;
+        top: 35%;
+        background: none;
+        color: #a4917e;
+        font-size: 24px;
+    }
+
+    .slider .slick-next {
+        right: 15px;
+    }
+
+    .slider .single-item {
+        padding: 0 10px;
+    }
+
+    .slider .single-item img {
+        margin: auto;
+    }
+
+    .slider .single-item .weapon-name {
+        color: #a4917e;
+        font-weight: 600;
+        letter-spacing: 1px;
+    }
+
+    .slider .single-item .price {
+        font-weight: 700;
+        color: #eb8800;
+        margin: 0;
+    }
+
+    .raffles {
+        padding: 25px 0;
+    }
+
+    .raffles h1 {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 48px;
+        margin-top: 0;
+    }
+
+    .raffles .game-thumb {
+        border: 5px solid #eb8800;
+    }
+
+    .raffles .btn-main {
+        margin: 10px auto;
+    }
+
+    .raffles .info {
+        margin: 10px auto 25px auto;
+        font-size: 18px;
+    }
+
+    .raffles .info p {
+        margin: 0px auto;
+    }
+
+    .raffles td {
+        vertical-align: middle;
+    }
+
+    .raffles td .avatar {
+        margin-right: 10px;
+    }
+
+    .raffles .tickets {
+        position: absolute;
+        top: 30px;
+        right: 30px;
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 24px;
+        color: white;
+    }
+
+    .raffles .tickets .amount {
+        font-size: 40px;
+        background-color: #eb8800;
+        padding: 11px 17px 10px 15px;
+        -webkit-border-radius: 100%;
+        -moz-border-radius: 100%;
+        border-radius: 100%;
+        margin-left: 10px;
+    }
+
+    @media only screen and (min-width: 1200px) {
+        .raffles .participants-log {
+            padding: 0 25px;
+        }
+    }
+
+    .raffles .participants-log .winner {
+        color: #eb8800;
+        font-weight: 600;
+        letter-spacing: 1px;
+    }
+
+    .raffles .participants-log .winner .avatar {
+        margin-right: 10px;
+    }
+
+    .raffles .stats {
+        margin-top: 25px;
+        font-size: 24px;
+    }
+
+    .raffles .stats .single-stat {
+        background: rgba(164, 145, 126, 0.25);
+        color: #d3b89d;
+        padding: 10px 15px 1px;
+        margin: 5px auto;
+    }
+
+    .raffles .chat {
+        width: 100%;
+        height: 400px;
+    }
+
+    @media only screen and (min-width: 720px) and (max-width: 959px) {
+        .raffles .chat {
+            height: 500px;
+            padding: 25px 0;
+        }
+    }
+
+    @media only screen and (min-width: 1200px) {
+        .raffles .chat {
+            height: 600px;
+            padding: 25px 0;
+        }
+    }
+
+    .content-zone {
+        margin: 25px auto;
+        padding: 10px 15px;
+        background: rgba(0, 0, 0, 0.5);
+    }
+
+    footer {
+        background: rgba(211, 184, 157, 0.1);
+        background-size: cover;
+        margin-top: 50px;
+        padding: 25px 0;
+    }
+
+    footer h3 {
+        color: #a4917e;
+        font-family: 'Bebas Neue', sans-serif;
+    }
+
+    footer li a {
+        color: #eb8800;
+        text-transform: uppercase;
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+    footer li a:hover,
+    footer li a:focus {
+        background: none;
+    }
+
+    footer li a::before,
+    footer li a::after {
+        display: inline-block;
+        opacity: 0;
+        -webkit-transition: -webkit-transform 0.3s, opacity 0.2s;
+        -moz-transition: -moz-transform 0.3s, opacity 0.2s;
+        transition: transform 0.3s, opacity 0.2s;
+    }
+
+    footer li a::before {
+        margin-right: 10px;
+        content: '|';
+        color: #a4917e;
+        -webkit-transform: translateX(20px);
+        -moz-transform: translateX(20px);
+        transform: translateX(20px);
+    }
+
+    footer li a::after {
+        margin-left: 10px;
+        content: '|';
+        color: #a4917e;
+        -webkit-transform: translateX(-20px);
+        -moz-transform: translateX(-20px);
+        transform: translateX(-20px);
+    }
+
+    footer li a:hover::before,
+    footer li a:hover::after,
+    footer li a:focus::before,
+    footer li a:focus::after {
+        opacity: 1;
+        -webkit-transform: translateX(0px);
+        -moz-transform: translateX(0px);
+        transform: translateX(0px);
+    }
+
+    footer .menu {
+        margin-left: -10px;
+    }
+
+    footer .menu li {
+        margin: 5px auto;
+    }
+
+    footer .menu li a {
+        color: #d3b89d;
+        text-transform: capitalize;
+        font-size: 14px;
+    }
+
+    footer .menu li a:hover {
+        text-decoration: none;
+    }
+
+    .copyright,
+    .disclaimer {
+        margin: 15px auto;
+        font-weight: 500;
+        font-size: 14px;
+        color: #a4917e;
+    }
+
+
+</style>
+
+
+<div class="table-wrapper" align="center">
+    <h3 class="table-title">Registered Users </h3>
+    <table class="table table-condensed table-striped">
+
+        <thead>
+        <tr>
+            <th>User</th>
+            <th>Type</th>
+            <th>Team Name</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+        <tr>
+
+            <td>
+                 <a href="http://steamcommunity.com/profiles/{{user.steam_id}}">{{user}}</a>
+            </td>
+            <td>
+                {% if user.member1 == None %}User{% elif user.member1 != None %}<a href="/users/{{user.steam_id}}">Team</a>{% endif %}
+            </td>
+            {% if user.team %}
+                        <td>
+                {{user.team}}
+
+            </td>
+
+            {%else%}
+                                    <td>
+
+                            None
+            </td>
+            {%endif%}
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+{% endblock %}
