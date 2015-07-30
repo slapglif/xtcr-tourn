@@ -253,7 +253,7 @@ def stripe2():
         print request.args.get('card')
         customer = Customer.create(
             email = str(emailz),
-            card = str(request.args.get('card'))
+            card = request.form['stripeToken']
 
         )
         if team == 1:
