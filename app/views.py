@@ -238,6 +238,7 @@ def stripe2():
     form = xForm()
     form2 = signForm()
     team = None
+    output = render_template("fail.html")
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
         if g.user != None:
