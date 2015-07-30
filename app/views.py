@@ -245,32 +245,56 @@ def stripe2():
         if g.user != None:
             team = g.user.ptype
             emailz = g.user.email
-    stripe.api_key = stripe_keys['secret_key']
-    print "--- begin stripe ---"
-    if request.form['stripeToken']:
-        print "--- stripe 1 worked ---"
-        stripe.api_key = "sk_live_GFHD3hslyrBiTy9I2HCEIP7y"
-        ttest = request.form['stripeToken']
-        customer = stripe.Customer.create(
-            email = str(emailz),
-            source = "stuff"
-        )
-        if team == 1:
-            amnt = 5
-            print amnt
-        else:
-            amnt = 20
-            print amnt
-        charge = Charge.create(
-            customer=customer.id,
-            amount=amnt * 100,
-            currency='usd',
-            description='xTcR Donation'
-        )
 
-        print "--- stripe 2 worked ---"
+    stripe_token = request.form['stripeToken']
+    email = request.form['stripeEmail']
+    if team == 1:
+        amnt = 5
+        print amnt
+    else:
+        amnt = 20
+        print amnt
+    try:
+        charge = stripe.Charge.create(
+                amount=int(amnt * 100),
+                currency='usd',
+                card=stripe_token,
+                description=email)
 
         output = render_template('success.html')
+    except stripe.CardError, e:
+        return render_template("fail.html")
+
+
+
+    # stripe.api_key = stripe_keys['secret_key']
+    # print "--- begin stripe ---"
+    # if request.form['stripeToken']:
+    #     print "--- stripe 1 worked ---"
+    #     stripe.api_key = "sk_live_GFHD3hslyrBiTy9I2HCEIP7y"
+    #     ttest = request.form['stripeToken']
+    #     customer = stripe.Customer.create(
+    #         email = str(emailz),
+    #         source = str(ttest)
+    #     )
+    #     if team == 1:
+    #         amnt = 5
+    #         print amnt
+    #     else:
+    #         amnt = 20
+    #         print amnt
+    #     charge = Charge.create(
+    #         customer=customer.id,
+    #         amount=amnt * 100,
+    #         currency='usd',
+    #         description='xTcR Donation'
+    #     )
+
+
+
+
+
+
 
     return output
 
