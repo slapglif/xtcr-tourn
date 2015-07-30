@@ -251,7 +251,7 @@ def stripe2():
         print "--- stripe 1 worked ---"
         stripe.api_key = "sk_live_GFHD3hslyrBiTy9I2HCEIP7y"
         ttest = request.form['stripeToken']
-        customer = Customer.create(
+        customer = stripe.Customer.create(
             email = str(emailz),
             source = str(ttest)
         )
