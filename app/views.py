@@ -250,6 +250,7 @@ def stripe2():
     if request.form['stripeToken']:
         print "--- stripe 1 worked ---"
         stripe.api_key = "sk_live_GFHD3hslyrBiTy9I2HCEIP7y"
+        print request.args.get('card')
         customer = Customer.create(
             email = str(emailz),
             card = str(request.args.get('card'))
