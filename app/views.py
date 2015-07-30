@@ -244,8 +244,9 @@ def stripe2():
         if g.user != None:
             team = g.user.ptype
     stripe.api_key = stripe_keys['secret_key']
+    print "--- begin stripe ---"
     if request.form.get('email'):
-
+        print "--- stripe 1 worked ---"
         stripe.api_key = "sk_live_GFHD3hslyrBiTy9I2HCEIP7y"
         customer = Customer.create(
             email= request.form.get('email'),
@@ -253,14 +254,18 @@ def stripe2():
         )
         if team == 1:
             amnt = 5
+            print amnt
         else:
             amnt = 20
+            print amnt
         charge = Charge.create(
             customer=customer.id,
             amount=amnt * 100,
             currency='usd',
             description='xTcR Donation'
         )
+
+        print "--- stripe 2 worked ---"
 
         output = render_template('success.html')
 
