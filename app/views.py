@@ -245,12 +245,12 @@ def stripe2():
             team = g.user.ptype
     stripe.api_key = stripe_keys['secret_key']
     print "--- begin stripe ---"
-    if request.form.get('email'):
+    if request.form['email']:
         print "--- stripe 1 worked ---"
         stripe.api_key = "sk_live_GFHD3hslyrBiTy9I2HCEIP7y"
         customer = Customer.create(
-            email= request.form.get('email'),
-            card=request.form['stripeToken']
+            email = request.form['email'],
+            card = request.form['stripeToken']
         )
         if team == 1:
             amnt = 5
