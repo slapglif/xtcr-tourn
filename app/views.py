@@ -234,6 +234,14 @@ stripe_keys = {
 
 @app.route("/stripe2", methods=['GET', 'POST'])
 def stripe2():
+    g.user = None
+    form = xForm()
+    form2 = signForm()
+    team = None
+    if 'user_id' in session:
+        g.user = User.query.get(session['user_id'])
+        if g.user != None:
+            team = g.user.ptype
     stripe.api_key = stripe_keys['secret_key']
     if request.form.get('email'):
 
@@ -242,10 +250,13 @@ def stripe2():
             email= request.form.get('email'),
             card=request.form['stripeToken']
         )
-
+        if team == 1:
+            amnt = 5
+        else:
+            amnt = 20
         charge = Charge.create(
             customer=customer.id,
-            amount=request.form.get('data-amount') * 100,
+            amount=amnt * 100,
             currency='usd',
             description='xTcR Donation'
         )
