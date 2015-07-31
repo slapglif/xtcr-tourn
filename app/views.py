@@ -269,6 +269,11 @@ def stripe2():
         db_session.commit()
 
         output = render_template('success.html')
+        if g.user.ptype == 1:
+            html = "<p>You will be receiving a friend request in steam from a user named xTcR | Tournament [IN]. You will need to accept this friend request to be verified on the date of the tournament.</p><p>The tournament will be on August 15th, 2015 at 1:00pm EST. You and your team will need to be in xTcR's teamspeak (ts3.xtcr.net > INS Tournament Waiting Room) 1 hour before the starting time in order to be verified.</p>"
+        else:
+            html = "<p>You will be receiving a friend request in steam from a user named xTcR | Tournament [IN]. You will need to accept this friend request to be verified on the date of the tournament.</p><p>The tournament will be on August 15th, 2015 at 1:00pm EST.  You will need to be in teamspeak (ts3.xtcr.net > INS Tournament Waiting Room) 1 and a half hours before the starting time to allow time for teaming up.</p>"
+        drill(g.user.email,html)
     except stripe.CardError, e:
         return render_template("fail.html")
 
