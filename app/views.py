@@ -142,6 +142,7 @@ def success():
     else:
         html = "<p>You will be receiving a friend request in steam from a user named xTcR | Tournament [IN]. You will need to accept this friend request to be verified on the date of the tournament.</p><p>The tournament will be on August 15th, 2015 at 1:00pm EST.  You will need to be in teamspeak (ts3.xtcr.net > INS Tournament Waiting Room) 1 and a half hours before the starting time to allow time for teaming up.</p>"
     drill(g.user.email,html)
+    print "email %s sent to %s"%(html,g.user.email)
     output = render_template('success.html',username=g.user)
 
     return output
