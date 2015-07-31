@@ -72,7 +72,7 @@ def signup():
         session['username'] = g.user.nickname
         session['email'] = form2.email.data
         g.user.email = form2.email.data
-        drill(g.user.nickname,g.user.email)
+
 
         db_session.commit()
 
