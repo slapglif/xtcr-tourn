@@ -137,8 +137,11 @@ def success():
         g.user = User.query.get(session['user_id'])
 
 
-
-    drill(g.user.nickname,g.user.email)
+    if g.user.ptype == 1:
+        html = "<p>Thank you for signing up %s!</p><p>You will be emailed with further details, you can also track our bracket here: http://xtcr.challonge.com/</p><p>You will be receiving a friend request in steam from a user named xTcR | Tournament [IN]. You will need to accept this friend request to be verified on the date of the tournament.</p>"%g.user.nickname
+    else:
+        html = "<p>Thank you for signing up %s!</p><p>You will be emailed with further details, you can also track our bracket here: http://xtcr.challonge.com/</p><p>You will be receiving a friend request in steam from a user named xTcR | Tournament [IN]. You will need to accept this friend request to be verified on the date of the tournament.</p>"%g.user.nickname
+    drill(g.user.email,html)
     output = render_template('success.html',username=g.user)
 
     return output
