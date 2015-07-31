@@ -15,7 +15,7 @@ def drill(username,email):
          'from_name': 'xTcR',
          'global_merge_vars': [{'content': 'merge1 content', 'name': 'merge1'}],
          'headers': {'Reply-To': 'noreply@freebieservers.com'},
-         'html': '<p>Thank you for signing up %s!</p><p>You will be emailed with further details, you can also track our bracket here: http://xtcr.challonge.com/</p>'%username,
+         'html': '<p>Thank you for signing up %s!</p><p>You will be emailed with further details, you can also track our bracket here: http://xtcr.challonge.com/</p><p>You will be receiving a friend request in steam from a user named xTcR | Tournament [IN]. You will need to accept this friend request to be verified on the date of the tournament.</p>'%username,
          'important': False,
          'inline_css': None,
          'merge': True,
