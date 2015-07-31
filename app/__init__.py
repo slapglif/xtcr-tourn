@@ -9,7 +9,7 @@ from sqlalchemy.ext.declarative import declarative_base
 app = Flask(__name__)
 db = SQLAlchemy(app)
 db.init_app(app)
-engine = create_engine('mysql://root:Fuc5M4n15!@db.freebieservers.com/tourn', convert_unicode=True)
+engine = create_engine('sqlite:///db.sqlite', convert_unicode=True)
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
                                          bind=engine,))
