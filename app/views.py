@@ -29,7 +29,7 @@ def index():
     form = xForm()
     g.user = None
     count = 0
-    output = render_template('index.html',username=g.user,form=form)
+    output = render_template('index.html',username=g.user,form=form,count=count)
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
         if g.user != None:
