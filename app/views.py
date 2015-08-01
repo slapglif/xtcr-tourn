@@ -30,9 +30,11 @@ def index():
     g.user = None
     count = 0
     for users in User.query.filter_by(ptype=2):
-        count += 20 * 0.3
+        if users.paid == 1:
+            count += 20 * 0.3
     for users in User.query.filter_by(ptype=1):
-        count += 5 * 0.3
+        if users.paid == 1:
+            count += 5 * 0.3
     output = render_template('index.html',username=g.user,form=form,count=count)
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
