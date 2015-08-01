@@ -846,7 +846,7 @@
                  <a href="http://steamcommunity.com/profiles/{{user.steam_id}}">{{user}}</a>
             </td>
             <td>
-                {% if user.member1 == None %}User{% elif user.member1 != None %}<a href="/users/{{user.steam_id}}">Team</a>{% endif %}
+                {% if user.ptype == 1 %}User{% elif user.ptype == 2 %}<a href="/users/{{user.steam_id}}">Team</a>{% endif %}
             </td>
             {% if user.team %}
                         <td>
