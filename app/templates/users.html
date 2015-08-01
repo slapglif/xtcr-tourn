@@ -837,7 +837,9 @@
         </tr>
         </thead>
         <tbody>
+
         {% for user in users %}
+            {% if user.paid == 1 %}
         <tr>
 
             <td>
@@ -859,6 +861,7 @@
             </td>
             {%endif%}
         </tr>
+            {% endif %}
         {% endfor %}
         </tbody>
     </table>
