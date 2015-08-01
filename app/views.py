@@ -29,17 +29,16 @@ def index():
     form = xForm()
     g.user = None
     count = 0
+    for users in User.query.filter_by(ptype=2):
+        count += 20
+    for users in User.query.filter_by(ptype=1):
+        count += 5
     output = render_template('index.html',username=g.user,form=form,count=count)
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
         if g.user != None:
             ptype = g.user.ptype
             if ptype == '0':
-                for users in User.query.filter_by(ptype=2):
-                    count += 20
-                for users in User.query.filter_by(ptype=1):
-                    count += 5
-
                 output = render_template('index.html',username=g.user,form=form,count=count)
 
             else:
